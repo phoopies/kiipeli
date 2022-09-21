@@ -1,0 +1,1 @@
+export const BASE_URL = "https://kiipeli.herokuapp.com/api"; //"http://localhost:3001/api"; // 'https://bongari-app.herokuapp.com/api'; // 'http://localhost:3001/api'; //  // 'http://localhost:3001/api'; //  //  //  //  //  // ; //  // ; //  // ;
