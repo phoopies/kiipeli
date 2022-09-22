@@ -68,7 +68,23 @@ const WallAddRoute = () => {
         clickable
       />
       <ContentTabsAddRoute index={index} handleChange={handleChange} />
-      <SwipeableViews
+      {index === 0 &&
+        (show ? (
+          <ClimbingWall
+            route={[]}
+            mode={"add"}
+            newRoute={newRoute}
+            setNewRoute={setNewRoute}
+            image={`/boulderpaja.jpeg`}
+          />
+        ) : (
+          <Splash type="full" speed={500} />
+        ))}
+      {index === 1 && (
+        <AddRouteForm sx={{ display: "none" }} route={newRoute} />
+      )}
+      {/*
+<SwipeableViews
         index={index}
         onChangeIndex={(index) => setIndex(index)}
         enableMouseEvents
@@ -102,6 +118,8 @@ const WallAddRoute = () => {
 
         <AddRouteForm sx={{ display: "none" }} route={newRoute} />
       </SwipeableViews>
+
+        */}
 
       {wall ? (
         <WallFooterAddRoute index={index} handleClick={handleArrowClick} />

@@ -75,8 +75,33 @@ const Wall = () => {
         clickable
       />
       <ContentTabs index={index} handleChange={handleChange} />
-
-      <SwipeableViews
+      {index === 0 &&
+        (show ? (
+          <ClimbingWall
+            route={
+              routes && selectedRoute !== null ? routes[selectedRoute] : []
+            }
+            image={"/boulderpaja.jpeg"}
+            mode="route"
+          />
+        ) : (
+          <Splash type="full" speed={500} />
+        ))}
+      {index === 1 && <Routes routes={routes} handleClick={handleRouteClick} />}
+      {index === 2 && (
+        <Box
+          sx={{
+            display: "flex",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6">Ei lisätietoja</Typography>
+        </Box>
+      )}
+      {/*
+<SwipeableViews
         index={index}
         onChangeIndex={(index) => setIndex(index)}
         enableMouseEvents
@@ -120,6 +145,7 @@ const Wall = () => {
           <Typography variant="h6">Ei lisätietoja</Typography>
         </Box>
       </SwipeableViews>
+        */}
 
       {wall ? (
         <WallFooter
