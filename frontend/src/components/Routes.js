@@ -18,8 +18,17 @@ const Routes = ({ routes, handleClick }) => {
   const userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
   const dispatch = useDispatch();
 
+  const customRoutes = (amount) => {
+    return Array(amount).fill({
+      id: "asdfasf",
+      name: "testireitti",
+      grade: "6A",
+      description: "ei tietoja",
+    });
+  };
+
   return (
-    <div style={{ height: "100%", width: "100%" }}>
+    <Box sx={{ height: "100%", overflow: "auto" }}>
       <List
         sx={{
           height: "100%",
@@ -60,12 +69,12 @@ const Routes = ({ routes, handleClick }) => {
                   />
                 </ListItemButton>
               </ListItem>
-              <Divider variant="middle" />
+              {i !== routes.length - 1 && <Divider variant="middle" />}
             </div>
           );
         })}
       </List>
-    </div>
+    </Box>
   );
 };
 
