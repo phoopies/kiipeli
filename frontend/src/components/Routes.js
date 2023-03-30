@@ -8,15 +8,46 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import NorthIcon from "@mui/icons-material/North";
+import SouthIcon from "@mui/icons-material/South";
 import RouteGradeAvatar from "./RouteGradeAvatar";
 import { useDispatch } from "react-redux";
 import { removeRoute } from "../reducers/routesSlice";
+import { useState } from "react";
 
 const Routes = ({ routes, handleClick }) => {
+  const [sort, setSort] = useState(
+    localStorage.getItem("sort") ? localStorage.getItem("sort") : "Date"
+  );
+  const [direction, setDirection] = useState(
+    localStorage.getItem("direction")
+      ? localStorage.getItem("direction")
+      : "Down"
+  );
+
   const userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
   const dispatch = useDispatch();
+
+  const handleSort = () => {
+    localStorage.setItem("sort", sort === "Date" ? "Grade" : "Date");
+    setSort((sort) => (sort === "Date" ? "Grade" : "Date"));
+  };
+
+  const handleDirection = () => {
+    localStorage.setItem("direction", direction === "Down" ? "Up" : "Down");
+    setDirection((direction) => (direction === "Down" ? "Up" : "Down"));
+  };
+
+  const sortByGrade = (a, b) => {
+    return direction === "Down" ? a.grade < b.grade : a.grade > b.grade;
+  };
+
+  const sortByDate = (array) => {
+    return direction === "Down" ? array.reverse() : array;
+  };
 
   const customRoutes = (amount) => {
     return Array(amount).fill({
@@ -28,7 +59,33 @@ const Routes = ({ routes, handleClick }) => {
   };
 
   return (
-    <Box sx={{ height: "100%", overflow: "auto" }}>
+    <Box sx={{ height: "100%", overflow: "hidden", paddingBottom: "24px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          textAlign: "center",
+          padding: "8px 12px",
+          backgroundColor: "primary.main",
+          color: "secondary.main",
+        }}
+      >
+        <Box>
+          <Typography variant="subtitle1">JÄRJESTÄ:</Typography>
+        </Box>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: "24px" }}>
+          <Box onClick={handleSort}>
+            <Typography variant="body1">
+              {sort === "Date" ? "PÄIVÄ" : "GREIDI"}
+            </Typography>
+          </Box>
+          <Box onClick={handleDirection}>
+            {direction === "Down" ? <SouthIcon /> : <NorthIcon />}
+          </Box>
+        </Box>
+      </Box>
       <List
         sx={{
           height: "100%",
@@ -36,43 +93,85 @@ const Routes = ({ routes, handleClick }) => {
         }}
       >
         {routes.length === 0 && <div>Ei vielä reittejä</div>}
-        {routes.map((route, i) => {
-          return (
-            <div key={i + 1}>
-              <ListItem
-                alignItems="flex-start"
-                secondaryAction={
-                  userRoutes?.includes(route.id) ? (
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        dispatch(removeRoute({ route }));
-                        handleClick(null);
-                      }}
-                      edge="end"
-                      aria-label="delete"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  ) : null
-                }
-              >
-                <ListItemButton onClick={() => handleClick(i)}>
-                  <ListItemAvatar>
-                    <RouteGradeAvatar size={40} grade={route.grade} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${route.name}, ${route.grade}`}
-                    secondary={`${
-                      route.description ? route.description : "Boulder"
-                    }`}
-                  />
-                </ListItemButton>
-              </ListItem>
-              {i !== routes.length - 1 && <Divider variant="middle" />}
-            </div>
-          );
-        })}
+        {/* TODO PURKKA!! Päivämääräsortti vähän purkkailtu */}
+
+        {sort === "Date" &&
+          sortByDate([...routes]).map((route, i) => {
+            return (
+              <div key={i + 1}>
+                <ListItem
+                  alignItems="flex-start"
+                  secondaryAction={
+                    userRoutes?.includes(route.id) ? (
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(removeRoute({ route }));
+                          handleClick(null);
+                        }}
+                        edge="end"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null
+                  }
+                >
+                  <ListItemButton onClick={() => handleClick(i)}>
+                    <ListItemAvatar>
+                      <RouteGradeAvatar size={40} grade={route.grade} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${route.name}, ${route.grade}`}
+                      secondary={`${
+                        route.description ? route.description : "Boulder"
+                      }`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+                {i !== routes.length - 1 && <Divider variant="middle" />}
+              </div>
+            );
+          })}
+
+        {sort === "Grade" &&
+          [...routes].sort(sortByGrade).map((route, i) => {
+            return (
+              <div key={i + 1}>
+                <ListItem
+                  alignItems="flex-start"
+                  secondaryAction={
+                    userRoutes?.includes(route.id) ? (
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(removeRoute({ route }));
+                          handleClick(null);
+                        }}
+                        edge="end"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null
+                  }
+                >
+                  <ListItemButton onClick={() => handleClick(i)}>
+                    <ListItemAvatar>
+                      <RouteGradeAvatar size={40} grade={route.grade} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={`${route.name}, ${route.grade}`}
+                      secondary={`${
+                        route.description ? route.description : "Boulder"
+                      }`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+                {i !== routes.length - 1 && <Divider variant="middle" />}
+              </div>
+            );
+          })}
       </List>
     </Box>
   );
