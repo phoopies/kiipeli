@@ -49,6 +49,24 @@ const ClimbingWall = ({
   const canvasRef = useRef(null);
   const handleRightClick = () => null;
 
+  const calculateClosestToPoint = (relativePosition, holdArray) => {
+    if (!holdArray) return null;
+    let closestHold = null;
+    let closestDistance = Number.POSITIVE_INFINITY;
+    for (let hold of holdArray) {
+      let x = Math.abs(relativePosition.x - hold.x);
+      let y = Math.abs(relativePosition.y - hold.y);
+      if (x + y < closestDistance) {
+        closestDistance = x + y;
+        closestHold = hold;
+      }
+      console.log("Distance of Hold:", x + y);
+    }
+    console.log("ClosestDistance = ", closestDistance);
+    console.log("Closest Hold = ", closestHold);
+    return closestHold ? closestHold : holdArray[0];
+  };
+
   // Handles image loading
   const handleImageLoad = (e) => {
     // Get width / height, then set maxheight based on this
@@ -62,11 +80,13 @@ const ClimbingWall = ({
   // This is the clickhandler
   useEffect(() => {
     if (mode !== "add") return;
+
     const getHold = (relativePosition) => {
       const image = document.getElementById("image");
       const translation = getTranslation(image);
       const imageDimensions = getScaledDimensions(image, translation.scale);
 
+      const foundHolds = [];
       for (const hold of holds) {
         // Check if inside the radius
         const elementWidth =
@@ -78,9 +98,12 @@ const ClimbingWall = ({
               (relativePosition.y - hold.y) * (relativePosition.y - hold.y)
           ) < elementWidth
         ) {
-          return hold;
+          foundHolds.push(hold);
+          // return hold;
         }
       }
+      if (foundHolds.length)
+        return calculateClosestToPoint(relativePosition, foundHolds);
       return null;
     };
 

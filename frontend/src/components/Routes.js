@@ -58,6 +58,13 @@ const Routes = ({ routes, handleClick }) => {
     });
   };
 
+  const sortAndDirect = (array) => {
+    if (sort === "Date") return sortByDate(array);
+    if (sort === "Grade") return array.sort(sortByGrade);
+    console.error("Nyt meni jotain pieleen sorttauksessa pahasit");
+    return [];
+  };
+
   return (
     <Box sx={{ height: "100%", overflow: "hidden", paddingBottom: "24px" }}>
       <Box
@@ -94,84 +101,43 @@ const Routes = ({ routes, handleClick }) => {
       >
         {routes.length === 0 && <div>Ei vielä reittejä</div>}
         {/* TODO PURKKA!! Päivämääräsortti vähän purkkailtu */}
-
-        {sort === "Date" &&
-          sortByDate([...routes]).map((route, i) => {
-            return (
-              <div key={i + 1}>
-                <ListItem
-                  alignItems="flex-start"
-                  secondaryAction={
-                    userRoutes?.includes(route.id) ? (
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          dispatch(removeRoute({ route }));
-                          handleClick(null);
-                        }}
-                        edge="end"
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    ) : null
-                  }
-                >
-                  <ListItemButton onClick={() => handleClick(i)}>
-                    <ListItemAvatar>
-                      <RouteGradeAvatar size={40} grade={route.grade} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={`${route.name}, ${route.grade}`}
-                      secondary={`${
-                        route.description ? route.description : "Boulder"
-                      }`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-                {i !== routes.length - 1 && <Divider variant="middle" />}
-              </div>
-            );
-          })}
-
-        {sort === "Grade" &&
-          [...routes].sort(sortByGrade).map((route, i) => {
-            return (
-              <div key={i + 1}>
-                <ListItem
-                  alignItems="flex-start"
-                  secondaryAction={
-                    userRoutes?.includes(route.id) ? (
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          dispatch(removeRoute({ route }));
-                          handleClick(null);
-                        }}
-                        edge="end"
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    ) : null
-                  }
-                >
-                  <ListItemButton onClick={() => handleClick(i)}>
-                    <ListItemAvatar>
-                      <RouteGradeAvatar size={40} grade={route.grade} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={`${route.name}, ${route.grade}`}
-                      secondary={`${
-                        route.description ? route.description : "Boulder"
-                      }`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-                {i !== routes.length - 1 && <Divider variant="middle" />}
-              </div>
-            );
-          })}
+        {sortAndDirect([...routes]).map((route, i) => {
+          return (
+            <div key={i + 1}>
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={
+                  userRoutes?.includes(route.id) ? (
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        dispatch(removeRoute({ route }));
+                        handleClick(null);
+                      }}
+                      edge="end"
+                      aria-label="delete"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  ) : null
+                }
+              >
+                <ListItemButton onClick={() => handleClick(i)}>
+                  <ListItemAvatar>
+                    <RouteGradeAvatar size={40} grade={route.grade} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${route.name}, ${route.grade}`}
+                    secondary={`${
+                      route.description ? route.description : "Boulder"
+                    }`}
+                  />
+                </ListItemButton>
+              </ListItem>
+              {i !== routes.length - 1 && <Divider variant="middle" />}
+            </div>
+          );
+        })}
       </List>
     </Box>
   );

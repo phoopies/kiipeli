@@ -97,7 +97,10 @@ const Wall = () => {
             justifyContent: "center",
           }}
         >
-          <Typography variant="h6">Ei lisätietoja</Typography>
+          <Typography variant="h6">
+            Ilmoittakaa bugeista/kehitysideoista kassalle, korjataan jos
+            ehditään! -J
+          </Typography>
         </Box>
       )}
       {/*
