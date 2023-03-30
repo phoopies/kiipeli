@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Divider,
   IconButton,
   List,
@@ -23,9 +24,7 @@ const Routes = ({ routes, handleClick }) => {
     localStorage.getItem("sort") ? localStorage.getItem("sort") : "Date"
   );
   const [direction, setDirection] = useState(
-    localStorage.getItem("direction")
-      ? localStorage.getItem("direction")
-      : "Down"
+    localStorage.getItem("direction") ? localStorage.getItem("direction") : "Up"
   );
 
   const userRoutes = JSON.parse(localStorage.getItem("userRoutes"));
@@ -42,11 +41,11 @@ const Routes = ({ routes, handleClick }) => {
   };
 
   const sortByGrade = (a, b) => {
-    return direction === "Down" ? a.grade < b.grade : a.grade > b.grade;
+    return direction === "Down" ? a.grade > b.grade : a.grade < b.grade;
   };
 
   const sortByDate = (array) => {
-    return direction === "Down" ? array.reverse() : array;
+    return direction === "Down" ? array : array.reverse();
   };
 
   const customRoutes = (amount) => {
@@ -72,24 +71,29 @@ const Routes = ({ routes, handleClick }) => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           textAlign: "center",
           padding: "8px 12px",
           backgroundColor: "primary.main",
           color: "secondary.main",
         }}
       >
-        <Box>
-          <Typography variant="subtitle1">JÄRJESTÄ:</Typography>
-        </Box>
         <Box sx={{ display: "flex", flexDirection: "row", gap: "24px" }}>
           <Box onClick={handleSort}>
-            <Typography variant="body1">
+            <Button variant="outlined" color="secondary">
               {sort === "Date" ? "PÄIVÄ" : "GREIDI"}
-            </Typography>
+            </Button>
           </Box>
           <Box onClick={handleDirection}>
-            {direction === "Down" ? <SouthIcon /> : <NorthIcon />}
+            {direction === "Down" ? (
+              <IconButton color="secondary">
+                <SouthIcon />
+              </IconButton>
+            ) : (
+              <IconButton color="secondary">
+                <NorthIcon />
+              </IconButton>
+            )}
           </Box>
         </Box>
       </Box>
