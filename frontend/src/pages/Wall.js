@@ -80,7 +80,9 @@ const Wall = () => {
         (show ? (
           <ClimbingWall
             route={
-              routes && selectedRoute !== null ? routes[selectedRoute] : []
+              routes && selectedRoute !== null
+                ? routes.find((route) => route.id === selectedRoute)
+                : []
             }
             image={"/jklkiipeilykeskus.jpg"}
             mode="route"
@@ -153,7 +155,11 @@ const Wall = () => {
 
       {wall ? (
         <WallFooter
-          route={selectedRoute !== null ? routes[selectedRoute] : null}
+          route={
+            selectedRoute !== null
+              ? routes.find((route) => route.id === selectedRoute)
+              : null
+          }
           handleClick={handleArrowClick}
         />
       ) : (

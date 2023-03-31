@@ -60,6 +60,9 @@ export const routesSlice = createSlice({
     initializeRoutes: (state, action) => {
       return { ...state, routes: action.payload };
     },
+    sortRoutes: (state, action) => {
+      return { ...state, routes: action.payload };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -97,6 +100,6 @@ export const routesSlice = createSlice({
       });
   },
 });
-export const { initializeFinds } = routesSlice.actions;
+export const { initializeFinds, sortRoutes } = routesSlice.actions;
 
 export default routesSlice.reducer;

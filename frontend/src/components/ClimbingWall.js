@@ -40,7 +40,6 @@ const ClimbingWall = ({
   image = null,
 }) => {
   console.log(mode);
-
   // TODO: NÄIDEN PITÄÄ OLLA TÄSSÄ NYT!
   const [maxWidth, setMaxWidth] = useState(
     800 >= window.innerWidth ? window.innerWidth : 800
@@ -48,6 +47,7 @@ const ClimbingWall = ({
   const [maxHeight, setMaxHeight] = useState(0); // Get this on imgLoad;
   const [canvasHeight, setCanvasHeight] = useState(0); // Get this on imgLoad;
   const { holds } = useSelector((state) => state.wall.wall);
+
   console.log("holds", holds);
   const canvasRef = useRef(null);
   const handleRightClick = () => null;
@@ -142,10 +142,11 @@ const ClimbingWall = ({
       ); // Relative to the image
       console.log("click", clickPosition);
       console.log("relative", relativePosition);
-      /*
 
+      /*
       if (e.button === 0) {
         const newHold = createHold(relativePosition);
+        console.log(newHold);
         setNewHolds((holds) => [...holds, newHold]);
       }
       if (e.button === 2) {

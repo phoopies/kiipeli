@@ -17,7 +17,7 @@ import SouthIcon from "@mui/icons-material/South";
 import RouteGradeAvatar from "./RouteGradeAvatar";
 import { useDispatch } from "react-redux";
 import { removeRoute } from "../reducers/routesSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Routes = ({ routes, handleClick }) => {
   const [sort, setSort] = useState(
@@ -41,6 +41,9 @@ const Routes = ({ routes, handleClick }) => {
   };
 
   const sortByGrade = (a, b) => {
+    console.log("sorting by grade");
+    console.log(a.grade);
+    console.log(b.grade);
     return direction === "Down" ? a.grade > b.grade : a.grade < b.grade;
   };
 
@@ -58,6 +61,7 @@ const Routes = ({ routes, handleClick }) => {
   };
 
   const sortAndDirect = (array) => {
+    console.log("sorting");
     if (sort === "Date") return sortByDate(array);
     if (sort === "Grade") return array.sort(sortByGrade);
     console.error("Nyt meni jotain pieleen sorttauksessa pahasit");
@@ -126,7 +130,7 @@ const Routes = ({ routes, handleClick }) => {
                   ) : null
                 }
               >
-                <ListItemButton onClick={() => handleClick(i)}>
+                <ListItemButton onClick={() => handleClick(route.id)}>
                   <ListItemAvatar>
                     <RouteGradeAvatar size={40} grade={route.grade} />
                   </ListItemAvatar>
