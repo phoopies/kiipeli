@@ -18,6 +18,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Wall = () => {
   const { wallId } = useParams();
+  console.log("wallid", wallId);
   const { wall } = useSelector((state) => state.wall);
   const { routes, loading } = useSelector((state) => state.routes);
   const [selectedRoute, setSelectedRoute] = useState(null);
@@ -81,7 +82,7 @@ const Wall = () => {
             route={
               routes && selectedRoute !== null ? routes[selectedRoute] : []
             }
-            image={"/boulderpaja.jpeg"}
+            image={"/jklkiipeilykeskus.jpg"}
             mode="route"
           />
         ) : (

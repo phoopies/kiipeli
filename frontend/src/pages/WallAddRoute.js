@@ -75,7 +75,7 @@ const WallAddRoute = () => {
             mode={"add"}
             newRoute={newRoute}
             setNewRoute={setNewRoute}
-            image={`/boulderpaja.jpeg`}
+            image={`/jklkiipeilykeskus.jpg`}
           />
         ) : (
           <Splash type="full" speed={500} />

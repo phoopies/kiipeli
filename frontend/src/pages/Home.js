@@ -26,6 +26,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const Home = () => {
   const [open, setOpen] = useState(false);
   const { walls, loading } = useSelector((state) => state.walls);
+  console.log("walls", walls);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

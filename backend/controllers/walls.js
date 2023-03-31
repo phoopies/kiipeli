@@ -37,6 +37,8 @@ wallsRouter.get("/:id", async (req, res) => {
   if (!wall) return res.status(404).json({ error: "Invalid id" });
   const holds = await WallHolds.findOne({ wallId: wall._id });
 
+  console.log(holds);
+
   return res.status(200).json({
     ...wall.toJSON(),
     // image: helpers.getImage(wall.image),
@@ -62,16 +64,16 @@ wallsRouter.get("/image/:id", async (req, res) => {
 
 // Holds come at a later stage
 wallsRouter.post("/", upload.single("image"), async (req, res) => {
-  const { name, description } = req.body;
-  const user = helpers.getUserFromToken(req.token);
-  if (!user) return res.status(404).json({ error: "User login required" });
+  const { name, description, user } = req.body;
+  // const user = helpers.getUserFromToken(req.token);
+  // if (!user) return res.status(404).json({ error: "User login required" });
 
   // Check for image
   if (!req.file.filename) res.status(400).json({ error: "Image needed" });
 
   const wall = new Wall({
     name,
-    user: user.id,
+    user,
     description,
     image: `/uploads/${req.file.filename}`,
   });
@@ -103,6 +105,7 @@ wallsRouter.put("/:id", async (req, res) => {
 });
 
 wallsRouter.put("/holds/:id", async (req, res) => {
+  console.log("here");
   const { id } = req.params;
   const { holds } = req.body;
   console.log(req.body);
