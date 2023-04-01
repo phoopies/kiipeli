@@ -142,18 +142,16 @@ const ClimbingWall = ({
       ); // Relative to the image
       console.log("click", clickPosition);
       console.log("relative", relativePosition);
-
       /*
       if (e.button === 0) {
         const newHold = createHold(relativePosition);
         console.log(newHold);
-        setNewHolds((holds) => [...holds, newHold]);
+        //setNewHolds((holds) => [...holds, newHold]);
       }
       if (e.button === 2) {
         handleRightClick();
       }
       */
-
       const hold = getHold(relativePosition);
 
       if (!hold) return;

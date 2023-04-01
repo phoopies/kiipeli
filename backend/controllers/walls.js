@@ -119,6 +119,18 @@ wallsRouter.put("/holds/:id", async (req, res) => {
   return res.status(200).json(updatedHolds.toJSON());
 });
 
+wallsRouter.post("/holds/:id", async (req, res) => {
+  const { id } = req.params;
+  const { hold } = req.body;
+
+  const wallHolds = await WallHolds.findOne({ wallId: id });
+
+  if (!wallHolds) return res.status(404).json({ error: "Holds not found" });
+  wallHolds.holds.push(hold);
+  const updatedHolds = await wallHolds.save({ new: true });
+  return res.status(200).json(updatedHolds.toJSON());
+});
+
 wallsRouter.put("/image/:id", upload.single("image"), async (req, res) => {
   const { id } = req.params;
   const wall = await Wall.findById(id);

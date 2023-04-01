@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import wallReducer from "./reducers/wallSlice";
 import routesReducer from "./reducers/routesSlice";
 import wallsReducer from "./reducers/wallsSlice";
+/*
 import {
   persistStore,
   persistReducer,
@@ -13,6 +14,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+*/
 
 // ROOT REDUCER
 const rootReducer = combineReducers({
@@ -21,6 +23,7 @@ const rootReducer = combineReducers({
   walls: wallsReducer,
 });
 
+/*
 // CONFIGURE PERSIST
 const persistConfig = {
   key: "root",
@@ -42,3 +45,8 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+*/
+
+export const store = configureStore({
+  reducer: rootReducer,
+});
