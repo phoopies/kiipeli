@@ -1,0 +1,29 @@
+# Use the official Node.js 18 image as the base image
+FROM node:18
+
+# Set the working directory inside the container
+WORKDIR /app
+
+## Copy app to WORKDIR folder
+COPY . .
+
+## Install packages
+RUN yarn install
+
+ENV SERVER_PORT=5000
+
+ENV CLIENT_PORT=5000
+
+ENV NODE_ENV="development"
+
+# Expose the port that the server listens on
+EXPOSE 5000
+
+# Expose the port that the client listens on
+EXPOSE 3000
+
+## Save build date and time
+RUN echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> /app/src/server/.env
+
+# Start the client and server in development
+CMD [ "yarn", "dev" ]

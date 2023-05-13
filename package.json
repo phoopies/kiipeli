@@ -1,12 +1,30 @@
 {
   "name": "kiipeli",
+  "private": true,
+  "workspaces": [
+    "src/**"
+  ],
   "version": "0.1.0",
   "engines": {
-    "node": "16.x",
+    "node": ">=16.0.0",
     "npm": "8.x"
   },
   "scripts": {
-    "start": "cd backend && node index.js",
-    "heroku-postbuild": "cd backend && npm install && cd ../frontend && npm install --force && npm run build"
-}
+    "start": "yarn workspace server start",
+    "dev:client": "yarn workspace client start",
+    "dev:server": "yarn workspace server dev",
+    "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:server\" \"yarn dev:client\"",
+    "lint": "eslint ./src/server ./src/client",
+    "heroku-postbuild": "yarn workspace server install && yarn workspace client install --force && yarn workspace client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.40.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "prettier": "^2.8.8"
+  }
 }

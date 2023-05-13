@@ -1,0 +1,7 @@
+node_modules
+dist
+webpack
+.eslintrc.js
+build
+mongo-init.js
+localstack

@@ -1,35 +1,22 @@
 version: '3'
 
 services:
-  client:
+  app:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
+      - '5000:5000'
     volumes:
-      - './frontend:/app'
+      - '.:/app'
       - '/app/node_modules/'
     environment:
       - NODE_ENV=development
       - API_URL=http://server:5000/api
-    command: yarn start
-
-  server:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - '5000:5000'
-    volumes:
-      - './backend:/app'
-      - '/app/node_modules/'
-    environment:
-      - NODE_ENV=development
       - MONGODB_URI=mongodb://user:pw@mongodb:27017/db?retryWrites=true&w=majority
     depends_on:
       - mongodb
-    command: yarn docker-dev
+    command: yarn dev
 
   mongodb:
     image: mongo:latest
