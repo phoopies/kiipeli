@@ -3,6 +3,7 @@ const helpers = require('./helpers');
 const logger = require('../util/logger');
 const Wall = require('../models/Wall');
 const Route = require('../models/Route');
+const WallHolds = require('../models/WallHolds');
 
 /*
 
@@ -17,10 +18,16 @@ DELETE :WALLID/:ID    delete one
 routesRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
   const route = await Route.findById(id);
+  const wallHolds = await WallHolds.findOne({ wallId: route.wallId });
 
   if (!route) return res.status(404).json({ error: 'Invalid id' });
 
-  return res.status(200).json(route.toJSON());
+  const getHold = (id) => wallHolds.holds.find((hold) => hold.id === id);
+  return res
+    .status(200)
+    .json(
+      { ...route.toJSON(), holds: route.holds.map((hold) => getHold(hold.id)) }
+    );
 });
 
 routesRouter.get('/wall/:wallId', async (req, res) => {
@@ -29,7 +36,7 @@ routesRouter.get('/wall/:wallId', async (req, res) => {
   const routes = await Route.find({ wallId });
   if (!routes) return res.status(404).json({ error: 'No routes found' });
 
-  return res.status(200).json(routes.map((route) => route.toJSON()));
+  return res.status(200).json(routes.reverse().map((route) => route.toJSON()));
 });
 
 routesRouter.post('/wall/:wallId', async (req, res) => {
@@ -50,12 +57,12 @@ routesRouter.post('/wall/:wallId', async (req, res) => {
     holds,
   });
 
-  logger.info('New route created', route);
-
   try {
     const newRoute = await route.save();
+    logger.info('New route created', route);
     return res.status(201).json(newRoute.toJSON());
   } catch (error) {
+    logger.error(error);
     return res.status(400).json({ error });
   }
 });

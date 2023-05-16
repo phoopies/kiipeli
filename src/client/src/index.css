@@ -1,7 +1,6 @@
 html, body, #root {
   margin: 0;
   padding: 0;
-  overflow: hidden;
   width: 100%;
   height: 100%;
   background-color: white;
@@ -10,24 +9,8 @@ html, body, #root {
 
 }
 
-#root {
-  max-width: 1080px;
-}
-
 * {
   -moz-box-sizing: border-box; 
   -webkit-box-sizing: border-box; 
    box-sizing: border-box; 
-}
-
-#canvas {
-  position: absolute;
-  z-index: 1; /* On top */
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;       
-  pointer-events: none; /* THIS IS NEEDED TO CLICK THROUGH  */
 }

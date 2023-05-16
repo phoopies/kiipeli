@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "yarn workspace server start",
-    "dev:client": "yarn workspace client start",
+    "dev:client": "yarn workspace client dev",
     "dev:server": "yarn workspace server dev",
     "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:server\" \"yarn dev:client\"",
     "lint": "eslint ./src/server ./src/client",

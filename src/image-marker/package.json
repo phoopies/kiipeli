@@ -1,0 +1,14 @@
+{
+  "name": "@kiipeli/image-marker",
+  "private": true,
+  "version": "1.0.0",
+  "main": "src/index.tsx",
+  "repository": "git@github.com:phoopies/free-setting.git",
+  "author": "stefu <sotajagic@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {}
+}
