@@ -1,4 +1,4 @@
-import { Box, Button, Input, Typography } from '@mui/material';
+import { Stack, Button, Input, Typography } from '@mui/material';
 import ImageMarker, { Marker } from '@kiipeli/image-marker';
 import { useState } from 'react';
 import CustomMarker from '../../components/customMarker';
@@ -8,6 +8,10 @@ const MARKER_MIN_WIDTH = 3;
 
 export default function WallAdd() {
   const [holds, setHolds] = useState<Marker[]>([]);
+  const [name, setName] = useState('');
+  const [uploadedImage, setUploadedImage] = useState<null | File>(null);
+
+  const canCreateWall = !!uploadedImage && holds.length > 0 && !!name
 
   const isSameMarker = (m1: Marker, m2: Marker) =>
     m1.x === m2.x && m1.y === m2.y;
@@ -29,25 +33,56 @@ export default function WallAdd() {
     updateHoldWidth(marker, newMarkerW);
   };
 
+  const handleCreateWall = async () => {
+    if (!canCreateWall) {
+      return
+    }
+    return;
+  }
+
   return (
-    <Box sx={{ my: '1rem' }}>
-      <Input placeholder="Wall name" />
-      <Typography>Mark all the holds on the wall</Typography>
-      <ImageMarker
-        markers={holds}
-        image="/jklkiipeilykeskus.jpg"
-        MarkerComponent={CustomMarker}
-        defaultNewMarkerWidth={5}
-        onMarkerZoomIn={(marker) => handleMarkerZoom(marker, 'IN')}
-        onMarkerZoomOut={(marker) => handleMarkerZoom(marker, 'OUT')}
-        onAddMarker={(marker) => setHolds((prev) => [...prev, marker])}
-        onMarkerClick={(marker) =>
-          setHolds((prev) =>
-            prev.filter((pHold) => !isSameMarker(pHold, marker))
-          )
-        }
+    <Stack sx={{ my: '1rem' }}>
+      <Button component="label">
+        {uploadedImage ? 'Upload other image' : 'Upload image'}
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          hidden
+          onChange={(event) =>
+            setUploadedImage(event.target.files ? event.target.files[0] : null)
+          }
+        />
+      </Button>
+      <Input
+        placeholder="Wall name"
+        onChange={(e) => setName(e.target.value)}
       />
-      <Button>Create wall</Button>
-    </Box>
+      {uploadedImage && (
+        <>
+          <Typography>Mark all the holds on the wall</Typography>
+          <ImageMarker
+            markers={holds}
+            image={URL.createObjectURL(uploadedImage)}
+            MarkerComponent={CustomMarker}
+            defaultNewMarkerWidth={5}
+            onMarkerZoomIn={(marker) => handleMarkerZoom(marker, 'IN')}
+            onMarkerZoomOut={(marker) => handleMarkerZoom(marker, 'OUT')}
+            onAddMarker={(marker) => setHolds((prev) => [...prev, marker])}
+            onMarkerClick={(marker) =>
+              setHolds((prev) =>
+                prev.filter((pHold) => !isSameMarker(pHold, marker))
+              )
+            }
+          />
+        </>
+      )}
+      <Button
+        variant="contained"
+        onClick={handleCreateWall}
+        disabled={!canCreateWall}
+      >
+        Create wall
+      </Button>
+    </Stack>
   );
 }
