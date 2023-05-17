@@ -12,15 +12,13 @@ import {
   Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import NorthIcon from '@mui/icons-material/North';
-import SouthIcon from '@mui/icons-material/South';
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
 import { removeRoute } from '../../reducers/routesSlice';
-import { Grade, Route } from '../../types';
-import { gradeToColor, gradeToNumber } from '../../helpers';
+import { Route } from '../../types';
+import { gradeToColor } from '../../helpers';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch } from '../../store';
+import { useMe } from '../../contexts/UserContext';
 
 type Props = {
   routes: Route[];
@@ -28,14 +26,15 @@ type Props = {
 
 export default function RouteList({ routes }: Props) {
   const navigate = useNavigate();
+  const me = useMe();
 
-  const userRoutesJson = localStorage.getItem('userRoutes');
-  const userRoutes = userRoutesJson ? JSON.parse(userRoutesJson) : [];
   const dispatch = useDispatch<AppDispatch>();
 
   const handleRouteDeletion = (route: Route) => {
     dispatch(removeRoute(route));
   };
+
+  console.log(routes, me);
 
   if (routes.length === 0) {
     return (
@@ -55,11 +54,11 @@ export default function RouteList({ routes }: Props) {
       >
         {routes.map((route, i) => {
           return (
-            <div key={i + 1}>
+            <div key={route.id}>
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={
-                  userRoutes.includes(route.id) ? (
+                  me && route.user === me.id ? (
                     <IconButton
                       onClick={(e) => {
                         e.stopPropagation();

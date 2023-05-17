@@ -1,62 +1,64 @@
 const authRouter = require('express').Router();
-
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
 const User = require('../models/User');
+const logger = require('../util/logger');
+const jwt = require('../util/jwt');
 
 const verifyPassword = async (password, passwordHash) => {
   const result = await bcrypt.compare(password, passwordHash);
   return result;
 };
 
+
 /*
   /REGISTER
   /LOGIN
-
 */
 
 authRouter.post('/register', async (req, res) => {
-  const { email, password, username } = req.body;
-  if (!email || !password)
-    return res.status(400).json({ error: 'invalid credentials' });
+  const { password, username } = req.body;
+  if (!username || !password)
+    return res.status(400).json({ error: 'Missing credentials' });
   const passwordHash = await bcrypt.hash(password, 10);
-  const user = new User({
-    email,
-    username,
-    passwordHash,
-  });
-
-  const createdUser = await user.save();
-  if (!createdUser)
-    return res.status(400).json({ error: 'couldnt register user' });
-
-  return res.status(201).json(createdUser);
+  try {
+    const user = await User.create({ username, passwordHash });
+    const token = jwt.createJwtToken(user);
+    return res.status(201).json({ user: user.toJSON(), token });
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).json({ error: 'Something went wrong' });
+  }
 });
 
 authRouter.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    return res.status(400).json({ error: 'invalid credentials' });
+  const { username, password } = req.body;
+  if (!username || !password)
+    return res.status(400).json({ error: 'Missing credentials' });
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ username });
   if (!user || !(await verifyPassword(password, user.passwordHash)))
-    return res.status(401).json({ error: 'invalid email or password' });
+    return res.status(401).json({ error: 'invalid username or password' });
 
-  const userForToken = {
-    id: user.id,
-    email,
-  };
-
-  const token = jwt.sign(userForToken, process.env.SECRET);
-
+  const token = jwt.createJwtToken(user);
   const jsonUser = user.toJSON();
 
-  // Palauttaa nyt { user, token }
   return res.status(200).json({
-    ...jsonUser,
+    user: jsonUser,
     token,
   });
+});
+
+authRouter.get('/me', async (req, res) => {
+  const token = req.token;
+  if (!token) {
+    return res.status(404).json({ error: 'Missing token' });
+  }
+  const tokenUser = jwt.decodeJwtToken(token);
+  const user = await User.findById(tokenUser.id);
+  if (!user) {
+    return res.status(404).json({ error: 'User does not exist' });
+  }
+  return res.status(200).json(user.toJSON());
 });
 
 module.exports = authRouter;

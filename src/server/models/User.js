@@ -4,17 +4,6 @@ const validators = require('../util/validators');
 
 const UserSchema = mongoose.Schema(
   {
-    email: {
-      type: String,
-      trim: true,
-      lowercase: true,
-      unique: true,
-      required: true,
-      validate: {
-        validator: validators.validateEmail,
-        message: 'virheellinen sähköpostiosoite',
-      },
-    },
     username: {
       type: String,
       trim: true,
@@ -22,6 +11,7 @@ const UserSchema = mongoose.Schema(
       max: [16, 'liian pitkä käyttäjänimi'],
       required: true,
       unique: true,
+      uniqueCaseInsensitive: true,
       validate: {
         validator: validators.validateUsername,
         message: 'virheellinen käyttäjänimi',

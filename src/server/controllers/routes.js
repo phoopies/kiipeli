@@ -1,10 +1,11 @@
 const routesRouter = require('express').Router();
 const helpers = require('./helpers');
 const logger = require('../util/logger');
+const jwt = require('../util/jwt');
 const Wall = require('../models/Wall');
 const Route = require('../models/Route');
 const WallHolds = require('../models/WallHolds');
-
+const User = require('../models/User');
 /*
 
 GET /:id              BY ID one
@@ -17,17 +18,16 @@ DELETE :WALLID/:ID    delete one
 
 routesRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const route = await Route.findById(id);
+  const route = await Route.findById(id).populate('user');
   const wallHolds = await WallHolds.findOne({ wallId: route.wallId });
 
   if (!route) return res.status(404).json({ error: 'Invalid id' });
 
   const getHold = (id) => wallHolds.holds.find((hold) => hold.id === id);
-  return res
-    .status(200)
-    .json(
-      { ...route.toJSON(), holds: route.holds.map((hold) => getHold(hold.id)) }
-    );
+  return res.status(200).json({
+    ...route.toJSON(),
+    holds: route.holds.map((hold) => getHold(hold.id)),
+  });
 });
 
 routesRouter.get('/wall/:wallId', async (req, res) => {
@@ -41,18 +41,25 @@ routesRouter.get('/wall/:wallId', async (req, res) => {
 
 routesRouter.post('/wall/:wallId', async (req, res) => {
   const { wallId } = req.params;
-  const { name, grade, user, description, holds } = req.body;
+  const { name, grade, description, holds } = req.body;
 
   if (holds.length === 0)
     return res.status(404).json({ error: 'invalid route holds' });
   const wall = await Wall.findById(wallId);
   if (!wall) return res.status(404).json({ error: 'Invalid wall' });
 
+  const token = req.token;
+  if (!token) {
+    return res.status(404).json({ error: 'Missing token' });
+  }
+  const tokenUser = jwt.decodeJwtToken(token);
+  const user = await User.findById(tokenUser.id);
+
   const route = new Route({
     wallId,
     name,
     grade,
-    user,
+    user: user ? user.id : null,
     description,
     holds,
   });

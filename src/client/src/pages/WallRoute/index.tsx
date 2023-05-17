@@ -33,7 +33,7 @@ export default function WallRoute() {
           <Button onClick={goBack}>Go back</Button>
           <Box mx="2rem">
             <Typography>
-              {route.grade} | {route.name}
+              {route.grade} | {route.name} | {route?.user ? route.user.username : "Tuntematon"}
             </Typography>
           </Box>
         </Box>

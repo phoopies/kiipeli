@@ -40,7 +40,6 @@ if (config.IS_DEVELOPMENT) {
         return;
       }
       const user = await User.create({
-        email: 'developer@developer.dev',
         username: 'developer',
         passwordHash: 'asdoihjaw',
       });

@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from './axios';
 import { BASE_URL } from './config';
-import { FormRoute, Hold, Route } from '../types';
+import { FormRoute, Hold, PopulatedRoute, Route } from '../types';
 
-const get = async (routeId: string): Promise<Route | null> => {
+const get = async (routeId: string): Promise<PopulatedRoute | null> => {
   try {
     const response = await axios.get(`${BASE_URL}/routes/${routeId}`);
     return response.data;

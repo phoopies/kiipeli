@@ -8,6 +8,7 @@ import Layout from './layout';
 import WallAdd from './pages/WallAdd';
 import Login from './pages/Login';
 import Register from './pages/Register.tsx';
+import Profile from './pages/Profile/index.tsx';
 
 export default createBrowserRouter([
   {
@@ -25,6 +26,10 @@ export default createBrowserRouter([
       {
         path: '/register',
         element: <Register />,
+      },
+      {
+        path: '/profile/:username',
+        element: <Profile />,
       },
       {
         path: 'walls/add',

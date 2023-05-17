@@ -4,12 +4,15 @@ import { store } from './store';
 import theme from './theme';
 import router from './router';
 import { RouterProvider } from 'react-router-dom';
+import { UserContextProvider } from './contexts/UserContext';
 
 function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <RouterProvider router={router} />
+        <UserContextProvider>
+          <RouterProvider router={router} />
+        </UserContextProvider>
       </ThemeProvider>
     </Provider>
   );

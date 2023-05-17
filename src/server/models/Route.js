@@ -37,11 +37,10 @@ const RouteSchema = mongoose.Schema(
       max: [3, 'Create a real grade'],
     },
     user: {
-      type: String,
-      trim: true,
-      min: [1, 'Too Short name'],
-      max: [32, 'Too long name'],
-      default: 'Tuntematon',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+      default: null,
     },
     description: {
       type: String,

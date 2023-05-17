@@ -1,11 +1,17 @@
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-mui';
 import * as yup from 'yup';
 import { Button, CircularProgress, Stack } from '@mui/material';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const validationSchema = yup.object().shape({
-  username: yup.string().required('Username is required'),
+  username: yup
+    .string()
+    .required('Username is required')
+    .min(3, 'Username must be at least 3 characters long')
+    .max(16, 'Username should be at most 16 characters long'),
   password: yup
     .string()
     .required('Password is required')
@@ -24,14 +30,29 @@ type RegisterParams = {
 };
 
 export default function RegisterForm() {
+  const { register } = useAuth();
+  const navigate = useNavigate();
   const initialValues: RegisterParams = {
     username: '',
     password: '',
     passwordConfirm: '',
   };
 
-  const handleSubmit = (values: RegisterParams) => {
-    toast('Registration failed', { type: 'error' });
+  const handleSubmit = async (
+    values: RegisterParams,
+    { setSubmitting }: FormikHelpers<RegisterParams>
+  ) => {
+    try {
+      await register(values);
+      toast('Account created and logged in', { type: 'success' });
+      navigate('/');
+    } catch (error) {
+      const msg =
+        error instanceof Error ? error.message : 'Registration failed';
+      toast(msg, { type: 'error' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (

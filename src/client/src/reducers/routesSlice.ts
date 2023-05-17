@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import routesService from '../services/routesService';
-import { FormRoute, Hold, Route, SliceLoadingState } from '../types';
+import { FormRoute, Hold, PopulatedRoute, Route, SliceLoadingState } from '../types';
 
 type initialState = {
-  route: Route | null;
+  route: PopulatedRoute | null;
   routes: Route[];
   loading: SliceLoadingState;
 };
@@ -20,7 +20,7 @@ export const getRoute = createAsyncThunk(
     try {
       const response = await routesService.get(routeId);
       if (!response) return thunkAPI.rejectWithValue('Problems getting route');
-      return response as Route;
+      return response as PopulatedRoute;
     } catch (error) {
       const message = 'Problems with fetching route';
       return thunkAPI.rejectWithValue(message);

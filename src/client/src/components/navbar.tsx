@@ -10,13 +10,15 @@ import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
+import { useMe } from '../contexts/UserContext';
 
 export default function Navbar() {
-  const isLoggedIn = false;
+  const me = useMe();
+  const isLoggedIn = !!me;
   const navigate = useNavigate();
 
   const handleProfileClick = () => {
-    navigate(isLoggedIn ? '/profile' : '/login');
+    navigate(isLoggedIn ? `/profile/${me.username}` : '/login');
   };
 
   const handleMenuClick = () => {
